@@ -89,6 +89,10 @@ func (s *ServerPool) HealthCheck() {
 	}
 }
 
+func (s *ServerPool) AddBackend(backend *Backend) {
+	s.Backends = append(s.Backends, backend)
+}
+
 // GetNextPeer returns next active peer to take a connection
 // it will loop through all the backends to find one Alive backend
 func (s *ServerPool) GetNextPeer() *Backend {
@@ -193,10 +197,17 @@ func main() {
 			ctx := context.WithValue(r.Context(), Attempts, attempts+1)
 			lb(w, r.WithContext(ctx))
 		}
+
+		serverPool.AddBackend(&Backend{
+			URL:          serverURl,
+			Alive:        true,
+			ReverseProxy: proxy,
+		})
+		log.Printf("%s:configured\n", serverURl)
 	}
 	// create http server
 	server := http.Server{
-		Addr:    fmt.Sprint(":d%", port),
+		Addr:    fmt.Sprintf(":%d", port),
 		Handler: http.HandlerFunc(lb),
 	}
 
