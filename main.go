@@ -20,6 +20,8 @@ const (
 	Retry
 )
 
+var serverPool ServerPool
+
 // Holds data about the server
 type Backend struct {
 	URL          *url.URL
@@ -129,7 +131,7 @@ func lb(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	peer := ServerPool.GetNextPeer()
+	peer := serverPool.GetNextPeer()
 	if peer != nil {
 		peer.ReverseProxy.ServeHTTP(w, r)
 		return
@@ -144,7 +146,7 @@ func healthCheck() {
 		select {
 		case <-t.C:
 			log.Println("Starting health check...")
-			ServerPool.HealthCheck()
+			serverPool.HealthCheck()
 			log.Println("Health check completed")
 		}
 	}
@@ -183,7 +185,7 @@ func main() {
 			}
 
 			// If we hit 3 retries, mark the backend as down
-			ServerPool.MarkBackendStatus(serverURl, false)
+			serverPool.MarkBackendStatus(serverURl, false)
 
 			// if the same request routing for few attempts with different backends, increase the count
 			attempts := GetAttemptsFromContext(r)
