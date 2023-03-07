@@ -6,8 +6,13 @@ tasks:
   build:
     cmds:
       - go build -o lb
+    desc: "builds the binary"
   
   build:image:
     cmds:
       - docker build -t elsn/simple-lb:latest -t elsn/simple-lb:0.1.0
-    
+    desc: "builds a docker image with a latest tag and a versioned tag"
+  run:
+    cmds:
+      - docker compose up --remove-orphans
+    desc: "runs the load balancer and tests it"

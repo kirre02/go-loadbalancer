@@ -156,7 +156,7 @@ func main() {
 	var serverList string
 	var port int
 	flag.StringVar(&serverList, "backends", "", "Load balanced backends, use commas to separate")
-	flag.IntVar(&port, "port", 3030, "Port to serve")
+	flag.IntVar(&port, "port", 9006, "Port to serve")
 	flag.Parse()
 
 	if len(serverList) == 0 {
@@ -199,6 +199,8 @@ func main() {
 		Addr:    fmt.Sprint(":d%", port),
 		Handler: http.HandlerFunc(lb),
 	}
+
+	go healthCheck()
 
 	log.Printf("Load Balancer started at :%d\n", port)
 	if err := server.ListenAndServe(); err != nil {
