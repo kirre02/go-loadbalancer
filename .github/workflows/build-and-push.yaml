@@ -7,7 +7,6 @@ on:
 jobs:
   build-and-push-image:
     runs-on: ${{ matrix.os }}
-    needs: test
     strategy:
       matrix:
         os: [ubuntu-latest]
