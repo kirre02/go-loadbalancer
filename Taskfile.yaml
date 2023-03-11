@@ -10,7 +10,7 @@ tasks:
   
   build:image:
     cmds:
-      - docker build -t elsn/simple-lb:latest -t elsn/simple-lb:0.1.0
+      - docker build . -t elsn/simple-lb:latest -t elsn/simple-lb:0.1.0
     desc: "builds a docker image with a latest tag and a versioned tag"
   run:
     cmds:
