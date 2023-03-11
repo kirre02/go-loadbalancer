@@ -30,4 +30,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: elsn/simple-lb:0.1.0 elsn/simple-lb:latest
+          tags: elsn/simple-lb:0.1.0
